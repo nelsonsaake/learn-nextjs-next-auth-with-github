@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# LESSONS 
 
-## Getting Started
+- Next.js Tutorial - 66 - Authentication Section Intro
+- Next.js Tutorial - 67 - Authentication in Next.js
+- Next.js Tutorial - 68 - NextAuth Setup
+- Next-Auth on App Router - Solid Auth, Super Fast
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## NEXT AUTH 
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Install
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+    npm i next-auth
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Need to reset an Oauth app
 
-## Learn More
+Here we used GitHub Oauth app at `profile > developer settings > apps > Oauth App`
+This is directional, it may not be exact
 
-To learn more about Next.js, take a look at the following resources:
+### Add an api handler for it 
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+`api\auth\[...nextauth]\route.ts`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+    import NextAuth from 'next-auth'
+    import GithubProvider from 'next-auth/providers/github'
 
-## Deploy on Vercel
+    export const authOptions = {
+        providers: [
+            GithubProvider({
+                clientId: process.env.GITHUB_CLIENT_ID ?? "",
+                clientSecret: process.env.GITHUB_CLIENT_SECRET ?? "",
+            })
+        ]
+    }
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+    const handler = NextAuth(authOptions)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+    export { handler as GET, handler as POST }
+
+### Available endpoints from (from next-auth)
+
+From the handler we just setup we get some useful endpoints 
+
+- `/api/auth/providers`: json response. Lists the providers we have.
+- `/api/auth/signin`: 
+
